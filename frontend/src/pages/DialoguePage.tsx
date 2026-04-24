@@ -149,8 +149,16 @@ const DialoguePage: React.FC = () => {
                   <span style={styles.messageTime}>{formatTime(message.timestamp)}</span>
                 </div>
                 <div style={styles.messageContent}>
-                  {message.content.split('\n').map((line, i) => (
-                    <p key={i} style={styles.messageParagraph}>{line}</p>
+                  {message.content.split('\n').map((line, i, lines) => (
+                    <p 
+                      key={i} 
+                      style={{
+                        ...styles.messageParagraph,
+                        marginBottom: i === lines.length - 1 ? 0 : 8,
+                      }}
+                    >
+                      {line}
+                    </p>
                   ))}
                 </div>
               </div>
@@ -333,9 +341,6 @@ const styles = {
     fontSize: 14,
     lineHeight: 1.7,
     margin: '0 0 8px',
-    '&:last-child': {
-      marginBottom: 0,
-    },
   },
   typing: {
     display: 'flex',
