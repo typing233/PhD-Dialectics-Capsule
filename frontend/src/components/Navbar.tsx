@@ -7,10 +7,21 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
+  const getActiveLink = () => {
+    if (!currentProject) return null;
+    const pathname = location.pathname;
+    const basePath = `/project/${currentProject.id}`;
+    
+    if (pathname === basePath) return 'dialogue';
+    if (pathname === `${basePath}/tree`) return 'tree';
+    if (pathname === `${basePath}/attack`) return 'attack';
+    if (pathname === `${basePath}/defense`) return 'defense';
+    if (pathname === `${basePath}/cross-disciplinary`) return 'cross-disciplinary';
+    
+    return null;
   };
+
+  const activeLink = getActiveLink();
 
   return (
     <nav style={styles.nav}>
@@ -24,31 +35,31 @@ const Navbar: React.FC = () => {
           <div style={styles.links}>
             <Link 
               to={`/project/${currentProject.id}`} 
-              style={{ ...styles.link, ...(isActive(`/project/${currentProject.id}`) && !isActive('/attack') && !isActive('/defense') && !isActive('/cross-disciplinary') ? styles.activeLink : {}) }}
+              style={{ ...styles.link, ...(activeLink === 'dialogue' ? styles.activeLink : {}) }}
             >
               🎯 苏格拉底对话
             </Link>
             <Link 
               to={`/project/${currentProject.id}/tree`} 
-              style={{ ...styles.link, ...(isActive(`/project/${currentProject.id}/tree`) ? styles.activeLink : {}) }}
+              style={{ ...styles.link, ...(activeLink === 'tree' ? styles.activeLink : {}) }}
             >
               🌳 论证树
             </Link>
             <Link 
               to={`/project/${currentProject.id}/attack`} 
-              style={{ ...styles.link, ...(isActive('/attack') ? styles.activeLink : {}) }}
+              style={{ ...styles.link, ...(activeLink === 'attack' ? styles.activeLink : {}) }}
             >
               👿 魔鬼代言人
             </Link>
             <Link 
               to={`/project/${currentProject.id}/defense`} 
-              style={{ ...styles.link, ...(isActive('/defense') ? styles.activeLink : {}) }}
+              style={{ ...styles.link, ...(activeLink === 'defense' ? styles.activeLink : {}) }}
             >
               🎤 答辩预演
             </Link>
             <Link 
               to={`/project/${currentProject.id}/cross-disciplinary`} 
-              style={{ ...styles.link, ...(isActive('/cross-disciplinary') ? styles.activeLink : {}) }}
+              style={{ ...styles.link, ...(activeLink === 'cross-disciplinary' ? styles.activeLink : {}) }}
             >
               🔬 跨学科嫁接器
             </Link>

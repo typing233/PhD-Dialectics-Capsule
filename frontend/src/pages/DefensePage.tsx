@@ -172,19 +172,21 @@ const DefensePage: React.FC = () => {
               <p>点击"生成问题"让AI基于你的论证树生成质询问题</p>
             </div>
           ) : (
-            questions.map((question) => (
-              <div 
-                key={question.id}
-                style={{
-                  ...styles.questionCard,
-                  ...(selectedQuestion?.id === question.id ? styles.questionCardSelected : {}),
-                  ...(question.evaluation ? styles.questionCardAnswered : {}),
-                }}
-                onClick={() => {
-                  setSelectedQuestion(question);
-                  if (!question.userAnswer) setAnswer('');
-                }}
-              >
+            questions.map((question) => {
+              const isSelected = selectedQuestion?.id === question.id;
+              return (
+                <div 
+                  key={question.id}
+                  style={{
+                    ...styles.questionCard,
+                    ...(question.evaluation ? styles.questionCardAnswered : {}),
+                    ...(isSelected ? styles.questionCardSelected : {}),
+                  }}
+                  onClick={() => {
+                    setSelectedQuestion(question);
+                    if (!question.evaluation) setAnswer('');
+                  }}
+                >
                 <div style={styles.questionHeader}>
                   <div style={styles.questionMeta}>
                     <span style={{ 
@@ -436,6 +438,7 @@ const styles = {
   questionCardSelected: {
     borderColor: '#667eea',
     boxShadow: '0 4px 16px rgba(102, 126, 234, 0.15)',
+    opacity: 1,
   },
   questionCardAnswered: {
     opacity: 0.85,
