@@ -84,3 +84,87 @@ export interface SocraticQuestion {
   purpose: string;
   category: 'clarification' | 'assumption' | 'evidence' | 'implication' | 'perspective';
 }
+
+export interface PromptTemplate {
+  id: string;
+  name: string;
+  category: string;
+  systemPrompt: string;
+  userPromptTemplate: string;
+  description: string;
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ThesisContent {
+  content: string;
+  keyPoints: string[];
+  citations?: string[];
+}
+
+export interface AntithesisContent {
+  content: string;
+  keyPoints: string[];
+  citations?: string[];
+}
+
+export interface SynthesisContent {
+  content: string;
+  keyPoints: string[];
+  reconciledPoints: string[];
+  citations?: string[];
+}
+
+export interface DialecticalTriad {
+  id: string;
+  projectId: string;
+  thesis: ThesisContent;
+  antithesis: AntithesisContent;
+  synthesis: SynthesisContent;
+  context: string;
+  createdAt: Date;
+}
+
+export interface DialecticalNode {
+  id: string;
+  projectId: string;
+  triadId?: string;
+  parentId: string | null;
+  type: 'thesis' | 'antithesis' | 'synthesis' | 'branch';
+  content: string;
+  keyPoints: string[];
+  citations?: string[];
+  position: { x: number; y: number };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface DialecticalEdge {
+  id: string;
+  projectId: string;
+  sourceId: string;
+  targetId: string;
+  relation: 'supports' | 'challenges' | 'evolves_from' | 'reconciles' | 'branches';
+  createdAt: Date;
+}
+
+export interface DialecticalGraph {
+  projectId: string;
+  nodes: DialecticalNode[];
+  edges: DialecticalEdge[];
+  triads: DialecticalTriad[];
+}
+
+export interface ExportConfig {
+  format: 'markdown' | 'latex';
+  includeCitations: boolean;
+  includeGraphVisualization: boolean;
+  includeConclusions: boolean;
+}
+
+export interface ExportResult {
+  content: string;
+  format: string;
+  filename: string;
+}

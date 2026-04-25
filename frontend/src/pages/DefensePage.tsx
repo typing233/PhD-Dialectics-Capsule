@@ -227,7 +227,8 @@ const DefensePage: React.FC = () => {
                   </div>
                 )}
               </div>
-            ))
+              );
+            })
           )}
         </div>
 

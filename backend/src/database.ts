@@ -84,10 +84,74 @@ export async function initDatabase(): Promise<Database> {
       FOREIGN KEY (project_id) REFERENCES projects(id)
     );
 
+    CREATE TABLE IF NOT EXISTS prompt_templates (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      category TEXT NOT NULL,
+      system_prompt TEXT NOT NULL,
+      user_prompt_template TEXT NOT NULL,
+      description TEXT,
+      is_default INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS dialectical_triads (
+      id TEXT PRIMARY KEY,
+      project_id TEXT NOT NULL,
+      thesis_content TEXT NOT NULL,
+      thesis_key_points TEXT NOT NULL,
+      thesis_citations TEXT,
+      antithesis_content TEXT NOT NULL,
+      antithesis_key_points TEXT NOT NULL,
+      antithesis_citations TEXT,
+      synthesis_content TEXT NOT NULL,
+      synthesis_key_points TEXT NOT NULL,
+      synthesis_reconciled_points TEXT NOT NULL,
+      synthesis_citations TEXT,
+      context TEXT,
+      created_at TEXT NOT NULL,
+      FOREIGN KEY (project_id) REFERENCES projects(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS dialectical_nodes (
+      id TEXT PRIMARY KEY,
+      project_id TEXT NOT NULL,
+      triad_id TEXT,
+      parent_id TEXT,
+      type TEXT NOT NULL CHECK(type IN ('thesis', 'antithesis', 'synthesis', 'branch')),
+      content TEXT NOT NULL,
+      key_points TEXT NOT NULL,
+      citations TEXT,
+      position_x REAL NOT NULL DEFAULT 0,
+      position_y REAL NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      FOREIGN KEY (project_id) REFERENCES projects(id),
+      FOREIGN KEY (triad_id) REFERENCES dialectical_triads(id),
+      FOREIGN KEY (parent_id) REFERENCES dialectical_nodes(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS dialectical_edges (
+      id TEXT PRIMARY KEY,
+      project_id TEXT NOT NULL,
+      source_id TEXT NOT NULL,
+      target_id TEXT NOT NULL,
+      relation TEXT NOT NULL CHECK(relation IN ('supports', 'challenges', 'evolves_from', 'reconciles', 'branches')),
+      created_at TEXT NOT NULL,
+      FOREIGN KEY (project_id) REFERENCES projects(id),
+      FOREIGN KEY (source_id) REFERENCES dialectical_nodes(id),
+      FOREIGN KEY (target_id) REFERENCES dialectical_nodes(id)
+    );
+
     CREATE INDEX IF NOT EXISTS idx_dialogue_project ON dialogue_messages(project_id);
     CREATE INDEX IF NOT EXISTS idx_nodes_project ON argument_nodes(project_id);
     CREATE INDEX IF NOT EXISTS idx_attacks_node ON attacks(node_id);
     CREATE INDEX IF NOT EXISTS idx_defense_project ON defense_questions(project_id);
+    CREATE INDEX IF NOT EXISTS idx_templates_category ON prompt_templates(category);
+    CREATE INDEX IF NOT EXISTS idx_triads_project ON dialectical_triads(project_id);
+    CREATE INDEX IF NOT EXISTS idx_dialectical_nodes_project ON dialectical_nodes(project_id);
+    CREATE INDEX IF NOT EXISTS idx_dialectical_edges_project ON dialectical_edges(project_id);
   `);
 
   return db;
