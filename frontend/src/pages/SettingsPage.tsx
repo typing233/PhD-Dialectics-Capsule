@@ -267,7 +267,7 @@ const SettingsPage: React.FC = () => {
                 style={styles.textarea}
                 rows={4}
               />
-              <p style={styles.hint}>使用 {{变量名}} 语法定义可替换的变量</p>
+              <p style={styles.hint}>使用 {'{{变量名}}'} 语法定义可替换的变量</p>
             </div>
 
             <div style={styles.formGroup}>
