@@ -195,7 +195,10 @@ const ExportPage: React.FC = () => {
                       }}
                     >
                       <div style={styles.triadHeader}>
-                        <div style={styles.checkbox}>
+                        <div style={{
+                          ...styles.checkbox,
+                          background: selectedTriads.includes(triad.id) ? '#667eea' : 'white',
+                        }}>
                           <span style={styles.checkmark}>
                             {selectedTriads.includes(triad.id) ? '✓' : ''}
                           </span>
